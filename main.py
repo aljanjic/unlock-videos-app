@@ -3,8 +3,10 @@
 import ffmpeg
 from moviepy.editor import VideoFileClip
 from speech_recognition import Recognizer, AudioFile
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
+# Not needed for now: 
+# import nltk
+# from nltk.sentiment import SentimentIntensityAnalyzer
+
 
 recognizer = Recognizer()
 
