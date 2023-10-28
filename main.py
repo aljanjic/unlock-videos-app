@@ -2,37 +2,30 @@
 # os.environ["IMAGEIO_FFMPEG_EXE"] = "/usr/bin/ffmpeg"
 import ffmpeg
 from moviepy.editor import VideoFileClip
-from speech_recognition import Recognizer, AudioFile
-# Not needed for now: 
-# import nltk
-# from nltk.sentiment import SentimentIntensityAnalyzer
+import whisper
+
+#audio_file_location = '/app/output/Video_test_1.wav'
+audio_file_location2 = '/app/output/Video_test_2.wav'
 
 
-recognizer = Recognizer()
+#video = VideoFileClip("Video_test_1.mp4")
+#video.audio.write_audiofile(audio_file_location)
 
-audio_file_location = '/app/output/Video_test_1.wav'
+video = VideoFileClip("Video_test_2.mp4")
+video.audio.write_audiofile(audio_file_location2)
 
-video = VideoFileClip("Video_test_1.mp4")
-video.audio.write_audiofile(audio_file_location)
-
-with AudioFile(audio_file_location) as audio_file:
-  audio = recognizer.record(audio_file)
-
-text = recognizer.recognize_google(audio)
+model = whisper.load_model("base")
+result = model.transcribe(audio_file_location2)
 
 # The filename of the file you want to write to
 #filename = f'video_transcript.txt'
 
 filename = '/app/output/video_transcript.txt'
 
-
-# Open the file with writing permission
 with open(filename, 'w') as file:
-  # Write text to the file
-  file.write(text)
+  file.write(result["text"])
 
-print(text)
-
+print(result["text"])
 
 
 # Analyzer of speech sentiment
