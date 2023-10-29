@@ -8,8 +8,8 @@ WORKDIR /app
 VOLUME /app/output
 
 # Copy your code and video file into the container
-COPY Video_test_1.mp4 .
-COPY Video_test_2.mp4 .
+COPY Test_videos/Video_test_1.mp4 .
+COPY Test_videos/Video_test_2.mp4 .
 COPY main.py .
 
 # Install required Python packages for your application
