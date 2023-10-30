@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3-alpine
+FROM python:3.8-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -9,13 +9,16 @@ VOLUME /app/output
 
 # Copy your code and video file into the container
 COPY Test_videos/Video_test_1.mp4 .
+COPY Test_videos/Video_test_2.mp4 .
 COPY main.py .
 
-# Install ffmpeg, build tools, C++ compiler, and OpenBLAS in the container
-RUN apk add --no-cache ffmpeg flac gcc g++ musl-dev python3-dev openblas-dev
-
 # Install required Python packages for your application
-RUN pip install --no-cache-dir ffmpeg-python moviepy SpeechRecognition nltk
+#RUN pip install --no-cache-dir ffmpeg-python moviepy SpeechRecognition nltk openai-whisper
 
+RUN pip install ffmpeg-python moviepy openai-whisper
+
+# Install ffmpeg in the container
+RUN apt-get update && apt-get install -y ffmpeg
+RUN apt-get upgrade -y
 # Run your script when the container launches
 CMD ["python", "main.py"]
