@@ -19,6 +19,6 @@ RUN pip install ffmpeg-python moviepy openai-whisper
 
 # Install ffmpeg in the container
 RUN apt-get update && apt-get install -y ffmpeg
-
+RUN apt-get upgrade -y
 # Run your script when the container launches
 CMD ["python", "main.py"]
