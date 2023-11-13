@@ -3,5 +3,5 @@ from django.http import JsonResponse
 
 # Create your views here.
 
-def dummy_data(request):
-    return JsonResponse({"message": "Hello, this is dummy data"})
+def spolocna_praca_funguje(request):
+    return JsonResponse({"message": "Diky kamo za pomoc vcera, toto teraz bezi na Django development servery :) "})
