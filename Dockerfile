@@ -5,12 +5,12 @@ FROM python:3.9
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Set work directory
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Install dependencies
+# Install any needed packages specified in requirements.txt
 COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
-COPY . /usr/src/app/
+# Copy the Django project into the container
+COPY jsonapi/ /usr/src/app/
