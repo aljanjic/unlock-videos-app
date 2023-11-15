@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Transcripts</title>
+</head>
+<body>
+    <h1>Transcripts</h1>
+    <ul>
+        {% for transcript in transcripts %}
+        <li>{{ transcript.name }}: {{ transcript.content }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
