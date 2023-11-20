@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Transcripts
 
 # Your existing function
-def spolocna_praca_funguje(request):
+def message(request):
     return JsonResponse({
         "message": "Diky kamo za pomoc vcera, toto teraz bezi na Django development servery :)",
         "option": "Y"
