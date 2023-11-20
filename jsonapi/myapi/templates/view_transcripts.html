@@ -7,7 +7,7 @@
     <h1>Transcripts</h1>
     <ul>
         {% for transcript in transcripts %}
-        <li>{{ transcript.name }}: {{ transcript.content }}</li>
+        <li>{{ transcript.id }}. {{ transcript.name }}: {{ transcript.content }}</li>
         {% endfor %}
     </ul>
 </body>
