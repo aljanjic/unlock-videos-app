@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
 from .models import Transcripts
 
@@ -26,6 +27,7 @@ def view_transcripts(request):
     return render(request, 'view_transcripts.html', {'transcripts': transcripts})
 
 # View to delete a Transcript
+@require_POST  # This decorator makes the view only accept POST requests
 def delete_transcript(request, id):
     transcript = get_object_or_404(Transcripts, id=id)
     transcript.delete()
