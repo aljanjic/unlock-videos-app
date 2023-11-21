@@ -12,13 +12,14 @@ def message(request):
 
 # Function to add a new Transcript
 def add_transcript(request):
+    message = ''  # Initialize an empty message
     if request.method == 'POST':
         name = request.POST.get('name')
-        content = request.POST.get('content', 'Hello there')  # 'Hello there' is the default content
+        content = request.POST.get('content', 'Hello there')
         if name:  # Make sure name is provided
             Transcripts.objects.create(name=name, content=content)
-            return HttpResponse('Transcript added successfully!')
-    return render(request, 'add_transcript.html')  # Render a template with a form to add a transcript
+            message = 'Transcript added successfully!'  # Set the success message
+    return render(request, 'add_transcript.html', {'message': message})
 
 
 # View to retrieve and display all Transcripts

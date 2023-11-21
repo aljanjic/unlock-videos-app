@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Add Transcript</title>
+
 </head>
 <body>
     <h1>Add a New Transcript</h1>
@@ -12,5 +13,10 @@
         <textarea id="content" name="content"></textarea><br><br>
         <input type="submit" value="Add Transcript">
     </form>
+    <!-- Display the message here -->
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+    <p><a href="{% url 'view_transcripts' %}"><button type="button">View Transcripts</button></a></p>
 </body>
 </html>
