@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
-from .models import Transcripts
+from .models import Transcripts, UploadedImage
+from .forms import ImageUploadForm
+
+
 
 # Your existing function
 def message(request):
@@ -35,4 +38,11 @@ def delete_transcript(request, id):
     return redirect('view_transcripts')  # Redirect to the view that displays all transcripts
 
 def upload_media(request):
-    return render(request, 'upload_media.html')
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('Image uploaded successfully!')
+    else:
+        form = ImageUploadForm()
+    return render(request, 'upload_media.html', {'form': form})

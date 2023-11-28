@@ -13,3 +13,7 @@ class TranscriptDetail(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.length} characters"
+    
+class UploadedImage(models.Model):
+    image = models.ImageField(upload_to='images/') # 'images/' is the directory where files will be stored'
+    uploaded_at= models.DateTimeField(auto_now_add=True)
