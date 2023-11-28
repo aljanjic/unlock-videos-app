@@ -6,4 +6,5 @@ urlpatterns = [
     path('add/', views.add_transcript, name='add_transcript'),
     path('view/', views.view_transcripts, name='view_transcripts'),
     path('delete/<int:id>/', views.delete_transcript, name='delete_transcript'),
+    path('upload-media', views.upload_media, name='upload_media')
 ]

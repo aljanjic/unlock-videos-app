@@ -33,3 +33,6 @@ def delete_transcript(request, id):
     transcript = get_object_or_404(Transcripts, id=id)
     transcript.delete()
     return redirect('view_transcripts')  # Redirect to the view that displays all transcripts
+
+def upload_media(request):
+    return render(request, 'upload_media.html')
