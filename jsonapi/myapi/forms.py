@@ -1,6 +1,6 @@
 from django import forms
 
-from jsonapi.myapi.models import UploadedImage
+from .models import UploadedImage
 
 class ImageUploadForm(forms.ModelForm):
     class Meta:
