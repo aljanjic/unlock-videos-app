@@ -38,11 +38,15 @@ def delete_transcript(request, id):
     return redirect('view_transcripts')  # Redirect to the view that displays all transcripts
 
 def upload_media(request):
+    message=''
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return HttpResponse('Image uploaded successfully!')
+            message='Upload successful'
+            form = ImageUploadForm()
+        else:
+            message = 'Upload failed. Please try again.'
     else:
         form = ImageUploadForm()
-    return render(request, 'upload_media.html', {'form': form})
+    return render(request, 'upload_media.html', {'form': form, 'message': message})
