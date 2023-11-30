@@ -15,7 +15,7 @@ class TranscriptDetail(models.Model):
         return f"{self.name} - {self.length} characters"
     
 class UploadedFile(models.Model):
-    file = models.FileField(upload_to='images/') # 'images/' is the directory where files will be stored'
+    file = models.FileField(upload_to='files/') # 'files/' is the directory where files will be stored'
     uploaded_at= models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
