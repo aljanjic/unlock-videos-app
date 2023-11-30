@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, JsonResponse
-from .models import Transcripts, UploadedImage
-from .forms import ImageUploadForm
+from .models import Transcripts, UploadedFile
+from .forms import MediaUploadForm
 
 
 
@@ -40,13 +40,13 @@ def delete_transcript(request, id):
 def upload_media(request):
     message=''
     if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
+        form = MediaUploadForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             message='Upload successful'
-            form = ImageUploadForm()
+            form = MediaUploadForm()
         else:
             message = 'Upload failed. Please try again.'
     else:
-        form = ImageUploadForm()
+        form = MediaUploadForm()
     return render(request, 'upload_media.html', {'form': form, 'message': message})
