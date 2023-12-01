@@ -11,7 +11,7 @@ class MediaUploadForm(forms.ModelForm):
     def clean_file(self):
         file = self.cleaned_data['file']
         extension = os.path.splitext(file.name)[1]
-        valid_extensions = ['.mp4', '.mov', '.avi', '.jpg', '.jpeg', '.png']
+        valid_extensions = ['.mp4', '.mov', '.avi', '.jpg', '.jpeg', '.png', '.wav', '.mp3', '.flac']
         if not extension.lower() in valid_extensions:
             raise ValidationError('Unsupported file extension.')
         return file
