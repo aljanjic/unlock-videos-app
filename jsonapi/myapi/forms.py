@@ -13,7 +13,7 @@ class MediaUploadForm(forms.ModelForm):
         file = self.cleaned_data['file']
         # Check file size
         if file.size > 50*1024*1024:  # 50MB limit
-            raise ValidationError('File too large. Size should not exceed 10 MB.')
+            raise ValidationError('File too large. Size should not exceed 50 MB.')
 
         # Check file content type
         mime = magic.from_buffer(file.read(1024), mime=True)
