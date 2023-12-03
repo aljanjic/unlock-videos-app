@@ -20,3 +20,11 @@ class UploadedFile(models.Model):
 
     def __str__(self):
         return f"File uploaded on {self.uploaded_at}"
+    
+class Video(models.Model):
+    file = models.FileField(upload_to='videos/')
+    transcript = models.TextField(blank=True)
+    processed = models.BooleanField(default=False)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    
