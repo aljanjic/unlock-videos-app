@@ -2,6 +2,9 @@
 <html>
 <head>
     <title>Upload Media</title>
+    {% if video_id %}
+    <meta http-equiv="refresh" content="30">
+    {% endif %}
 </head>
 <body>
     <h1>Upload a File</h1>
@@ -12,6 +15,9 @@
     </form>
     {% if message %}
     <p>{{ message }}</p>
+    {% endif %}
+    {% if video_id %}
+    <p>Processing video with ID: {{ video_id }}. Please wait...</p>
     {% endif %}
 </body>
 </html>

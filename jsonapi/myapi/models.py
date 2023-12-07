@@ -25,6 +25,9 @@ class Video(models.Model):
     file = models.FileField(upload_to='videos/')
     transcript = models.TextField(blank=True)
     processed = models.BooleanField(default=False)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)   
+    @property
+    def is_processed(self):
+        return self.processed
 
     
