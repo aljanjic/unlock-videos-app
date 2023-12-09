@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.conf import settings
 from .models import Transcripts, UploadedFile, Video
 from .forms import MediaUploadForm
 from moviepy.editor import VideoFileClip
@@ -8,6 +9,9 @@ import whisper
 import os
 import threading
 
+
+
+MEDIA_ROOT = settings.MEDIA_ROOT
 
 # Your existing function
 def message(request):
@@ -42,40 +46,50 @@ def delete_transcript(request, id):
 
 def upload_media(request):
     message = ''
-    video_id = None  # Initialize video_id as None
     if request.method == 'POST':
         form = MediaUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            uploaded_file = form.save()  # Save the file and get the instance back
-            # Check if uploaded file is a video by its MIME type or file extension
-            if 'video' in uploaded_file.file.content_type:
-                # Assign the ID of the saved video to video_id
-                video_id = uploaded_file.id
-                # Process video in a separate thread to avoid blocking
-                thread = threading.Thread(target=process_video, args=(uploaded_file.id,))
+            uploaded_file = form.save(commit=False)  # Save the uploaded file without committing to the DB
+            file_obj = request.FILES.get('file')  # Access the uploaded file object
+            if file_obj and file_obj.content_type.startswith('video'):
+                uploaded_file.save()  # Now you can save it to the DB since it's a video
+                video = Video(file=uploaded_file.file)
+                video.save()
+                thread = threading.Thread(target=process_video, args=(video.id,))
                 thread.start()
                 message = 'Upload successful. Processing video...'
             else:
-                message = 'Upload successful'
+                message = 'Upload successful. File is not a video.'
         else:
             message = 'Upload failed. Please try again.'
     else:
         form = MediaUploadForm()
-    # Pass video_id to the template
-    return render(request, 'upload_media.html', {'form': form, 'message': message, 'video_id': video_id})
+    return render(request, 'upload_media.html', {'form': form, 'message': message})
 
 
 def process_video(video_id):
-    video = Video.objects.get(id=video_id)
-    video_clip = VideoFileClip(video.file.path)
-    audio_file_location = '/path/to/audio/output.wav'
-    video_clip.audio.write_audiofile(audio_file_location)
-    
-    model = whisper.load_model("base")
-    result = model.transcribe(audio_file_location)
-    
-    video.transcript = result["text"]
-    video.processed = True
-    video.save()
+    try:
+        video = Video.objects.get(id=video_id)
+        video_clip = VideoFileClip(video.file.path)
 
-    os.remove(audio_file_location)  # Clean up the audio file
+        base_filename = os.path.splitext(os.path.basename(video.file.name))[0]
+        audio_file_name = f"{base_filename}.wav"
+        
+        # Use os.path.join to create the full path in the 'media' directory
+        audio_file_location = os.path.join(MEDIA_ROOT, 'audio', audio_file_name)
+        
+        # Ensure the 'audio' directory exists
+        os.makedirs(os.path.join(MEDIA_ROOT, 'audio'), exist_ok=True)
+
+        video_clip.audio.write_audiofile(audio_file_location)    
+        
+        model = whisper.load_model("base")
+        result = model.transcribe(audio_file_location)
+        
+        video.transcript = result["text"]
+        video.processed = True
+        video.save()
+
+        os.remove(audio_file_location)  # Clean up the audio file
+    except Video.DoesNotExist:
+        print(f"Video with id {video_id} does not exist.")
