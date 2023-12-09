@@ -8,6 +8,7 @@ from moviepy.editor import VideoFileClip
 import whisper
 import os
 import threading
+from uuid import uuid4
 
 
 
@@ -50,7 +51,15 @@ def upload_media(request):
         form = MediaUploadForm(request.POST, request.FILES)
         if form.is_valid():
             uploaded_file = form.save(commit=False)  # Save the uploaded file without committing to the DB
-            file_obj = request.FILES.get('file')  # Access the uploaded file object
+            
+            # Access the uploaded file object
+            file_obj = request.FILES.get('file')
+            
+            # Create a new filename with a UUID to avoid naming conflicts
+            ext = os.path.splitext(file_obj.name)[1]
+            unique_filename = f"{uuid4()}{ext}"
+            file_obj.name = unique_filename
+            
             if file_obj and file_obj.content_type.startswith('video'):
                 uploaded_file.save()  # Now you can save it to the DB since it's a video
                 video = Video(file=uploaded_file.file)
