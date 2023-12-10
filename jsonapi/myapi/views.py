@@ -1,14 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.conf import settings
-from .models import Transcripts, UploadedFile, Video
+from .models import Transcripts, UploadedFile
 from .forms import MediaUploadForm
 from moviepy.editor import VideoFileClip
 import whisper
 import os
 import threading
-from uuid import uuid4
 
 
 
@@ -17,7 +16,7 @@ MEDIA_ROOT = settings.MEDIA_ROOT
 # Your existing function
 def message(request):
     return JsonResponse({
-        "message": "Diky kamo za pomoc vcera, toto teraz bezi na Django development servery :)",
+        "message": "JSON return",
         "option": "Y"
     })
 
@@ -58,7 +57,7 @@ def upload_media(request):
             # Check the file type and process accordingly
             if file_obj.content_type.startswith('video'):
                 uploaded_file.save()  # Save the video file to the DB
-                video = Video(file=uploaded_file.file)
+                video = UploadedFile(file=uploaded_file.file)
                 video.save()
                 # Process video in a separate thread
                 thread = threading.Thread(target=process_video, args=(video.id,))
@@ -89,6 +88,7 @@ def process_audio(audio_file_id):
         
         # Create a transcript object
         transcript = Transcripts(name=audio_file.file.name, content=result["text"])
+        transcript.processed = True
         transcript.save()
 
         # Optionally, delete the audio file after processing
@@ -100,7 +100,7 @@ def process_audio(audio_file_id):
 
 def process_video(video_id):
     try:
-        video = Video.objects.get(id=video_id)
+        video = UploadedFile.objects.get(id=video_id)
         video_clip = VideoFileClip(video.file.path)
 
         base_filename = os.path.splitext(os.path.basename(video.file.name))[0]
@@ -118,6 +118,7 @@ def process_video(video_id):
         result = model.transcribe(audio_file_location)
 
         transcript = Transcripts(name=video.file.name, content=result["text"])
+        transcript.processed = True
         transcript.save()
 
         # Save again the output to myapi_video table
@@ -127,5 +128,5 @@ def process_video(video_id):
 
         # os.remove(audio_file_location)  # Clean up the audio file
         print(f"Video transcript created.")
-    except Video.DoesNotExist:
+    except UploadedFile.DoesNotExist:
         print(f"Video with id {video_id} does not exist.")
