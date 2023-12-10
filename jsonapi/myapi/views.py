@@ -55,25 +55,47 @@ def upload_media(request):
             # Access the uploaded file object
             file_obj = request.FILES.get('file')
             
-            # Create a new filename with a UUID to avoid naming conflicts
-            ext = os.path.splitext(file_obj.name)[1]
-            unique_filename = f"{uuid4()}{ext}"
-            file_obj.name = unique_filename
-            
-            if file_obj and file_obj.content_type.startswith('video'):
-                uploaded_file.save()  # Now you can save it to the DB since it's a video
+            # Check the file type and process accordingly
+            if file_obj.content_type.startswith('video'):
+                uploaded_file.save()  # Save the video file to the DB
                 video = Video(file=uploaded_file.file)
                 video.save()
+                # Process video in a separate thread
                 thread = threading.Thread(target=process_video, args=(video.id,))
                 thread.start()
                 message = 'Upload successful. Processing video...'
+            elif file_obj.content_type.startswith('audio'):
+                uploaded_file.save()  # Save the audio file to the DB
+                # Process audio in a separate thread
+                thread = threading.Thread(target=process_audio, args=(uploaded_file.id,))
+                thread.start()
+                message = 'Upload successful. Processing audio...'
             else:
-                message = 'Upload successful. File is not a video.'
+                message = 'Upload successful. File is not a video or audio and it will not be processed.'
         else:
             message = 'Upload failed. Please try again.'
     else:
         form = MediaUploadForm()
     return render(request, 'upload_media.html', {'form': form, 'message': message})
+
+def process_audio(audio_file_id):
+    try:
+        audio_file = UploadedFile.objects.get(id=audio_file_id)
+        audio_file_location = audio_file.file.path
+        
+        # Transcribe the audio file
+        model = whisper.load_model("base")
+        result = model.transcribe(audio_file_location)
+        
+        # Create a transcript object
+        transcript = Transcripts(name=audio_file.file.name, content=result["text"])
+        transcript.save()
+
+        # Optionally, delete the audio file after processing
+        # os.remove(audio_file_location)
+        print(f"Audio file transcript created.")
+    except UploadedFile.DoesNotExist:
+        print(f"Audio file with id {audio_file_id} does not exist.")
 
 
 def process_video(video_id):
@@ -94,11 +116,16 @@ def process_video(video_id):
         
         model = whisper.load_model("base")
         result = model.transcribe(audio_file_location)
-        
-        video.transcript = result["text"]
-        video.processed = True
-        video.save()
 
-        os.remove(audio_file_location)  # Clean up the audio file
+        transcript = Transcripts(name=video.file.name, content=result["text"])
+        transcript.save()
+
+        # Save again the output to myapi_video table
+        # video.transcript = result["text"]
+        # video.processed = True
+        # video.save()
+
+        # os.remove(audio_file_location)  # Clean up the audio file
+        print(f"Video transcript created.")
     except Video.DoesNotExist:
         print(f"Video with id {video_id} does not exist.")
