@@ -27,7 +27,7 @@ def add_transcript(request):
         name = request.POST.get('name')
         content = request.POST.get('content', 'Hello there')
         if name:  # Make sure name is provided
-            Transcripts.objects.create(name=name, content=content)
+            Transcripts.objects.create(file_name=name, content=content)
             message = 'Transcript added successfully!'  # Set the success message
     return render(request, 'add_transcript.html', {'message': message})
 
@@ -87,7 +87,7 @@ def process_audio(audio_file_id):
         result = model.transcribe(audio_file_location)
         
         # Create a transcript object
-        transcript = Transcripts(name=audio_file.file.name, content=result["text"])
+        transcript = Transcripts(file_name=audio_file.file.name, content=result["text"])
         transcript.processed = True
         transcript.save()
 
@@ -117,7 +117,7 @@ def process_video(video_id):
         model = whisper.load_model("base")
         result = model.transcribe(audio_file_location)
 
-        transcript = Transcripts(name=video.file.name, content=result["text"])
+        transcript = Transcripts(file_name=video.file.name, content=result["text"])
         transcript.processed = True
         transcript.save()
 
