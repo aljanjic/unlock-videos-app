@@ -56,7 +56,6 @@ def upload_media(request):
             
             # Check the file type and process accordingly
             if file_obj.content_type.startswith('video'):
-                uploaded_file.save()  # Save the video file to the DB
                 video = UploadedFile(file=uploaded_file.file)
                 video.save()
                 # Process video in a separate thread
@@ -70,7 +69,7 @@ def upload_media(request):
                 thread.start()
                 message = 'Upload successful. Processing audio...'
             else:
-                message = 'Upload successful. File is not a video or audio and it will not be processed.'
+                message = 'Upload successful but it will not be processed... File is not a video or audio'
         else:
             message = 'Upload failed. Please try again.'
     else:
