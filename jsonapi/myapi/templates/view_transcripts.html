@@ -6,9 +6,9 @@
 <body>
     <h1>Transcripts</h1>
     <!-- Add button to navigate to add_transcript -->
-    <a href="{% url 'add_transcript' %}">
-        <button>Add New Transcript</button>
-    </a>
+    <p><a href="{% url 'add_transcript' %}"> <button>Add New Transcript Manually</button></a></p>
+    <p><a href="{% url 'upload_media' %}"> <button type="button">Upload Media</button></a></p>
+
     <ul>
         {% for transcript in transcripts %}
         <li>
