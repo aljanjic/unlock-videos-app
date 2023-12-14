@@ -1,3 +1,5 @@
+.env
+.env.db
 # Compiled output
 /dist
 /tmp
