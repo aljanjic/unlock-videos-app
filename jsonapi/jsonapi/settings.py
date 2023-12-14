@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=ibw2ucfh4dnb=y+r)pp$4ebne3p8xy7hcd%ik)q&)4%f0w8o7'
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,11 +79,11 @@ WSGI_APPLICATION = 'jsonapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydatabase',           # same as POSTGRES_DB
-        'USER': 'myuser',               # same as POSTGRES_USER
-        'PASSWORD': 'mypassword',       # same as POSTGRES_PASSWORD
-        'HOST': 'db',                   # name of the service in docker-compose
-        'PORT': '5432',                 # default PostgreSQL port
+        'NAME': os.environ.get('DB_NAME', 'default_db_name'),
+        'USER': os.environ.get('DB_USER', 'default_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
