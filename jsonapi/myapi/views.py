@@ -6,6 +6,7 @@ from .models import Transcripts, UploadedFile
 from .forms import MediaUploadForm
 from moviepy.editor import VideoFileClip
 import whisper
+from openai import OpenAI
 import os
 import threading
 
@@ -129,3 +130,40 @@ def process_video(video_id):
         print(f"Video transcript created.")
     except UploadedFile.DoesNotExist:
         print(f"Video with id {video_id} does not exist.")
+
+
+def send_to_chatgpt(request, transcript_id):
+    try:
+        client = OpenAI()
+        transcript = Transcripts.objects.get(id=transcript_id)
+        content = transcript.content
+
+        client.api_key = settings.OPENAI_API_KEY  # Set the API key
+
+        chat_completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[      
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that is summarizing provided transcripts."
+                },
+                {
+                    "role": "user",
+                    "content": content
+                }
+            ]
+        )
+        
+        response_content = chat_completion.choices[0].message.content  # Modify this line as per your response structure
+
+        response_data = {
+            "response": response_content
+        }
+        print('Response from chatGPT:', response_content)
+        transcripts = Transcripts.objects.all()
+        return render(request, 'view_transcripts.html', {'transcripts': transcripts})
+
+
+        # return JsonResponse({"response": response_data})
+    except Transcripts.DoesNotExist:
+        return JsonResponse({"error": "Transcript not found"}, status=404)

@@ -16,6 +16,9 @@
             <form action="{% url 'delete_transcript' id=transcript.id %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Delete">
+                <a href="{% url 'send_to_chatgpt' transcript_id=transcript.id %}">
+                    <button type="button">Send to ChatGPT</button>
+                </a>
             </form>
         </li>
         {% endfor %}
