@@ -9,10 +9,19 @@ import whisper
 from openai import OpenAI
 import os
 import threading
+from rest_framework.generics import ListAPIView
+from .serializers import TranscriptsSerializer, UploadedFileSerializer
 
 
 
-MEDIA_ROOT = settings.MEDIA_ROOT
+class TranscriptsList(ListAPIView):
+    queryset = Transcripts.objects.all()
+    serializer_class = TranscriptsSerializer
+
+class UploadedFileList(ListAPIView):
+    queryset = UploadedFile.objects.all()
+    serializer_class = UploadedFileSerializer
+
 
 # Your existing function
 def message(request):
@@ -166,3 +175,5 @@ def send_to_chatgpt(request, transcript_id):
 
     except Transcripts.DoesNotExist:
         return JsonResponse({"error": "Transcript not found"}, status=404)
+    
+
