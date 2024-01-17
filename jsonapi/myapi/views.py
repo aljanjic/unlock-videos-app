@@ -159,8 +159,8 @@ def send_to_chatgpt(request, transcript_id):
         transcript.chatgpt_summary = response_content
         transcript.save()
 
-        print('Response from chatGPT:', response_content)
-        
+        print('Response from chatGPT:', response_content) # Can delete later  
+
         transcripts = Transcripts.objects.all()
         return redirect('view_transcripts')
 

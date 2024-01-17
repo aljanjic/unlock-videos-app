@@ -20,7 +20,7 @@
                 {% csrf_token %}
                 <input type="submit" value="Delete">
                 <a href="{% url 'send_to_chatgpt' transcript_id=transcript.id %}">
-                    <button type="button">Send to ChatGPT</button>
+                    <button type="button"> Create summary </button>
                 </a>
             </form>
         </li>

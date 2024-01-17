@@ -7,7 +7,7 @@ class Transcripts(models.Model):
     # Add other fields as needed
     processed_time= models.DateTimeField(auto_now_add=True)
     processed = models.BooleanField(default=False)
-    content = models.TextField(max_length=4000, default='Hello there')
+    content = models.TextField(max_length=4000)
     chatgpt_summary = models.TextField(blank=True, null=True)  # Field to store ChatGPT summarization
     
 class UploadedFile(models.Model):
