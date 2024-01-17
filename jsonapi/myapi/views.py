@@ -156,14 +156,13 @@ def send_to_chatgpt(request, transcript_id):
         
         response_content = chat_completion.choices[0].message.content  # Modify this line as per your response structure
 
-        response_data = {
-            "response": response_content
-        }
+        transcript.chatgpt_summary = response_content
+        transcript.save()
+
         print('Response from chatGPT:', response_content)
+        
         transcripts = Transcripts.objects.all()
-        return render(request, 'view_transcripts.html', {'transcripts': transcripts})
+        return redirect('view_transcripts')
 
-
-        # return JsonResponse({"response": response_data})
     except Transcripts.DoesNotExist:
         return JsonResponse({"error": "Transcript not found"}, status=404)
