@@ -22,14 +22,6 @@ class UploadedFileList(ListAPIView):
     queryset = UploadedFile.objects.all()
     serializer_class = UploadedFileSerializer
 
-
-# Your existing function
-def message(request):
-    return JsonResponse({
-        "message": "JSON return",
-        "option": "Y"
-    })
-
 # Function to add a new Transcript
 def add_transcript(request):
     message = ''  # Initialize an empty message
