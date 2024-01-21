@@ -108,10 +108,10 @@ def process_video(video_id):
         audio_file_name = f"{base_filename}.wav"
         
         # Use os.path.join to create the full path in the 'media' directory
-        audio_file_location = os.path.join(MEDIA_ROOT, 'audio', audio_file_name)
+        audio_file_location = os.path.join(settings.MEDIA_ROOT, 'audio', audio_file_name)
         
         # Ensure the 'audio' directory exists
-        os.makedirs(os.path.join(MEDIA_ROOT, 'audio'), exist_ok=True)
+        os.makedirs(os.path.join(settings.MEDIA_ROOT, 'audio'), exist_ok=True)
 
         video_clip.audio.write_audiofile(audio_file_location)    
         

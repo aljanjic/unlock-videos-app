@@ -7,7 +7,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapi', '0006_video_alter_uploadedfile_file'),
+        ('transcription', '0006_video_alter_uploadedfile_file'),
     ]
 
     operations = [

@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapi', '0007_delete_transcriptdetail_delete_video_and_more'),
+        ('transcription', '0007_delete_transcriptdetail_delete_video_and_more'),
     ]
 
     operations = [

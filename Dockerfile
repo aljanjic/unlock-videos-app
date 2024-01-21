@@ -14,4 +14,4 @@ RUN apt-get update && apt-get install -y ffmpeg && apt-get clean && rm -rf /var/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the Django project into the container
-COPY jsonapi/ /usr/src/app/
+COPY unlock-videos-app/ /usr/src/app/

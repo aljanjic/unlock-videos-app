@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapi', '0011_alter_transcripts_file_name'),
+        ('transcription', '0011_alter_transcripts_file_name'),
     ]
 
     operations = [

@@ -1,5 +1,5 @@
 """
-URL configuration for jsonapi project.
+URL configuration for unlock-videos-app project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -21,12 +21,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
-from myapi import views
+from transcription import views
 from django.urls import path
-from myapi.views import TranscriptsList, UploadedFileList
+from transcription.views import TranscriptsList, UploadedFileList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('transcription/', include('transcription.urls')),
     path('add/', views.add_transcript, name='add_transcript'),
     path('view/', views.view_transcripts, name='view_transcripts'),
     path('delete/<int:id>/', views.delete_transcript, name='delete_transcript'),

@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('myapi', '0004_uploadedimage'),
+        ('transcription', '0004_uploadedimage'),
     ]
 
     operations = [
