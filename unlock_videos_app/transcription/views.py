@@ -36,7 +36,7 @@ def add_transcript(request):
 
 # View to retrieve and display all Transcripts
 def view_transcripts(request):
-    transcripts = Transcripts.objects.all()
+    transcripts = Transcripts.objects.order_by('-id')
     return render(request, 'view_transcripts.html', {'transcripts': transcripts})
 
 # View to delete a Transcript

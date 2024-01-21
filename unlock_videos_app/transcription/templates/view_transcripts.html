@@ -12,7 +12,8 @@
     <ul>
         {% for transcript in transcripts %}
         <li>
-            {{ forloop.counter }}. {{ transcript.name }} {{ transcript.content }}
+            {{ forloop.counter }}. {{ transcript.file_name }}
+            <p>{{ transcript.content }} </p>
             {% if transcript.chatgpt_summary %}
             <p><strong>Summary:</strong> {{ transcript.chatgpt_summary }}</p>
             {% endif %}

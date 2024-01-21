@@ -1,5 +1,5 @@
 """
-ASGI unlock-videos-app for unlock-videos-app project.
+ASGI unlock_videos_app for unlock_videos_app project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'unlock-videos-app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'unlock_videos_app.settings')
 
 application = get_asgi_application()
