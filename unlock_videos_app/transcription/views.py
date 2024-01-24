@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse
 from django.conf import settings
 from .models import Transcripts, UploadedFile
@@ -23,6 +23,7 @@ class UploadedFileList(ListAPIView):
     serializer_class = UploadedFileSerializer
 
 # Function to add a new Transcript
+@require_POST
 def add_transcript(request):
     message = ''  # Initialize an empty message
     if request.method == 'POST':
@@ -35,6 +36,7 @@ def add_transcript(request):
 
 
 # View to retrieve and display all Transcripts
+@require_GET
 def view_transcripts(request):
     transcripts = Transcripts.objects.order_by('-id')
     return render(request, 'view_transcripts.html', {'transcripts': transcripts})
@@ -46,6 +48,7 @@ def delete_transcript(request, id):
     transcript.delete()
     return redirect('view_transcripts')  # Redirect to the view that displays all transcripts
 
+@require_POST
 def upload_media(request):
     message = ''
     if request.method == 'POST':
@@ -132,7 +135,7 @@ def process_video(video_id):
     except UploadedFile.DoesNotExist:
         print(f"Video with id {video_id} does not exist.")
 
-
+@require_POST
 def send_to_chatgpt(request, transcript_id):
     try:
         client = OpenAI()
