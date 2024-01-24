@@ -8,12 +8,12 @@
 </head>
 
 <p><a href="{% url 'view_transcripts' %}"><button type="button">View Transcripts</button></a></p>
-<p><a href="{% url 'add_transcript' %}"> <button>Add New Transcript Manually</button></a></p>
+<p><a href="{% url 'add_transcript_form' %}"> <button>Add New Transcript Manually</button></a></p>
 
 
 <body>
     <h1>Upload a File</h1>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" action="{% url 'upload_media_submit' %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload</button>

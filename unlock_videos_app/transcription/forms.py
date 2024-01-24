@@ -1,5 +1,5 @@
 from django import forms
-from .models import UploadedFile
+from .models import UploadedFile, Transcripts
 from django.core.exceptions import ValidationError
 import magic
 import os
@@ -8,6 +8,12 @@ class MediaUploadForm(forms.ModelForm):
     class Meta:
         model = UploadedFile
         fields = ['file']
+
+class TranscriptForm(forms.ModelForm):
+    class Meta:
+        model = Transcripts
+        fields = ['file_name', 'content']  # Adjust the fields based on your model
+
 
     def clean_file(self):
         file = self.cleaned_data['file']

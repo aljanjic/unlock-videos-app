@@ -3,7 +3,7 @@ from django.views.decorators.http import require_POST, require_GET, require_http
 from django.http import JsonResponse
 from django.conf import settings
 from .models import Transcripts, UploadedFile
-from .forms import MediaUploadForm
+from .forms import MediaUploadForm, TranscriptForm
 from moviepy.editor import VideoFileClip
 import whisper
 from openai import OpenAI
@@ -11,6 +11,7 @@ import os
 import threading
 from rest_framework.generics import ListAPIView
 from .serializers import TranscriptsSerializer, UploadedFileSerializer
+from django.contrib import messages
 
 
 
@@ -22,17 +23,27 @@ class UploadedFileList(ListAPIView):
     queryset = UploadedFile.objects.all()
     serializer_class = UploadedFileSerializer
 
-# Function to add a new Transcript
-@require_http_methods(["GET", "POST"])
-def add_transcript(request):
-    message = ''  # Initialize an empty message
+@require_GET
+def add_transcript_form(request):
+    # This view only handles displaying the form for a GET request.
+    form = TranscriptForm()  # Replace with your form for transcripts
+    return render(request, 'add_transcript.html', {'form': form})
+
+@require_POST
+def add_transcript_submit(request):
+    # This view handles the form submission for a POST request.
     if request.method == 'POST':
-        name = request.POST.get('name')
-        content = request.POST.get('content', 'Hello there')
-        if name:  # Make sure name is provided
-            Transcripts.objects.create(file_name=name, content=content)
-            message = 'Transcript added successfully!'  # Set the success message
-    return render(request, 'add_transcript.html', {'message': message})
+        form = TranscriptForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Transcript added successfully!')
+            return redirect('add_transcript_form')
+        else:
+            messages.error(request, 'Error adding transcript. Please try again.')
+    else:
+        form = TranscriptForm()
+
+    return render(request, 'add_transcript.html', {'form': form})
 
 
 # View to retrieve and display all Transcripts
@@ -48,38 +59,43 @@ def delete_transcript(request, id):
     transcript.delete()
     return redirect('view_transcripts')  # Redirect to the view that displays all transcripts
 
-@require_http_methods(["GET", "POST"])
-def upload_media(request):
-    message = ''
+@require_GET
+def upload_media_form(request):
+    # This view only handles displaying the form for a GET request.
+    form = MediaUploadForm()
+    return render(request, 'upload_media.html', {'form': form})
+
+@require_POST
+def upload_media_submit(request):
+    # This view handles the form submission and processing for a POST request.
     if request.method == 'POST':
         form = MediaUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            uploaded_file = form.save(commit=False)  # Save the uploaded file without committing to the DB
-            
-            # Access the uploaded file object
+            uploaded_file = form.save(commit=False)
             file_obj = request.FILES.get('file')
             
-            # Check the file type and process accordingly
             if file_obj.content_type.startswith('video'):
                 video = UploadedFile(file=uploaded_file.file)
                 video.save()
-                # Process video in a separate thread
                 thread = threading.Thread(target=process_video, args=(video.id,))
                 thread.start()
-                message = 'Upload successful. Processing video...'
+                messages.success(request, 'Upload successful. Processing video...')
             elif file_obj.content_type.startswith('audio'):
-                uploaded_file.save()  # Save the audio file to the DB
-                # Process audio in a separate thread
+                uploaded_file.save()
                 thread = threading.Thread(target=process_audio, args=(uploaded_file.id,))
                 thread.start()
-                message = 'Upload successful. Processing audio...'
+                messages.success(request, 'Upload successful. Processing audio...')
             else:
-                message = 'Upload successful but it will not be processed... File is not a video or audio'
+                messages.warning(request, 'Upload successful but it will not be processed... File is not a video or audio')
+            
+            return redirect('upload_media_form')
         else:
-            message = 'Upload failed. Please try again.'
-    else:
-        form = MediaUploadForm()
-    return render(request, 'upload_media.html', {'form': form, 'message': message})
+            messages.error(request, 'Upload failed. Please try again.')
+    
+    # If it's not a POST request or the form is not valid, just display the form.
+    form = MediaUploadForm()
+    return render(request, 'upload_media.html', {'form': form})
+
 
 def process_audio(audio_file_id):
     try:
