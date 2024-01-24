@@ -18,11 +18,13 @@
         {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
-    {% if message %}
-    <p>{{ message }}</p>
+    {% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
     {% endif %}
-    {% if video_id %}
-    <p>Processing video with ID: {{ video_id }}. Please wait...</p>
-    {% endif %}
+
+
+    
 </body>
 </html>
