@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.http import JsonResponse
 from django.conf import settings
 from .models import Transcripts, UploadedFile
@@ -23,7 +23,7 @@ class UploadedFileList(ListAPIView):
     serializer_class = UploadedFileSerializer
 
 # Function to add a new Transcript
-@require_POST
+@require_http_methods(["GET", "POST"])
 def add_transcript(request):
     message = ''  # Initialize an empty message
     if request.method == 'POST':
@@ -48,7 +48,7 @@ def delete_transcript(request, id):
     transcript.delete()
     return redirect('view_transcripts')  # Redirect to the view that displays all transcripts
 
-@require_POST
+@require_http_methods(["GET", "POST"])
 def upload_media(request):
     message = ''
     if request.method == 'POST':
