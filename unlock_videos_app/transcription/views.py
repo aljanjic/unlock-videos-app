@@ -151,7 +151,6 @@ def process_video(video_id):
     except UploadedFile.DoesNotExist:
         print(f"Video with id {video_id} does not exist.")
 
-@require_POST
 def send_to_chatgpt(request, transcript_id):
     try:
         client = OpenAI()
