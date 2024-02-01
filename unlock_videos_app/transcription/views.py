@@ -151,39 +151,29 @@ def process_video(video_id):
     except UploadedFile.DoesNotExist:
         print(f"Video with id {video_id} does not exist.")
 
-def send_to_chatgpt(request, transcript_id):
+
+def view_transcript_for_chatgpt(request, transcript_id):
+    # This could be a detail view where you can also send the transcript to ChatGPT
+    transcript = get_object_or_404(Transcripts, id=transcript_id)
+    return render(request, 'transcripts/detail.html', {'transcript': transcript})
+
+@require_POST
+def update_transcript_with_chatgpt(request, transcript_id):
+    transcript = get_object_or_404(Transcripts, id=transcript_id)
     try:
         client = OpenAI()
-        transcript = Transcripts.objects.get(id=transcript_id)
-        content = transcript.content
-
-        client.api_key = settings.OPENAI_API_KEY  # Set the API key
-
+        client.api_key = settings.OPENAI_API_KEY
         chat_completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[      
-                {
-                    "role": "system",
-                    "content": "You are a helpful assistant that is summarizing provided transcripts."
-                },
-                {
-                    "role": "user",
-                    "content": content
-                }
+                {"role": "system", "content": "You are a helpful assistant that is summarizing provided transcripts."},
+                {"role": "user", "content": transcript.content}
             ]
         )
-        
-        response_content = chat_completion.choices[0].message.content  # Modify this line as per your response structure
-
-        transcript.chatgpt_summary = response_content
+        transcript.chatgpt_summary = chat_completion.choices[0].message.content
         transcript.save()
+    except Exception as e:
+        messages.error(request, f'Failed to update transcript: {e}')
 
-        print('Response from chatGPT:', response_content) # Can delete later  
-
-        transcripts = Transcripts.objects.all()
-        return redirect('view_transcripts')
-
-    except Transcripts.DoesNotExist:
-        return JsonResponse({"error": "Transcript not found"}, status=404)
-    
+    return redirect('view_transcripts')
 

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xml:lang="en">
+
 <head>
     <title>View Transcripts</title>
 </head>
+
 <body>
     <h1>Transcripts</h1>
-    <!-- Add button to navigate to add_transcript -->
     <p><a href="{% url 'add_transcript_form' %}"> <button>Add New Transcript Manually</button></a></p>
     <p><a href="{% url 'upload_media_form' %}"> <button type="button">Upload Media</button></a></p>
 
@@ -13,16 +14,21 @@
         {% for transcript in transcripts %}
         <li>
             {{ forloop.counter }}. {{ transcript.file_name }}
-            <p>{{ transcript.content }} </p>
+            <p>{{ transcript.content }}</p>
             {% if transcript.chatgpt_summary %}
             <p><strong>Summary:</strong> {{ transcript.chatgpt_summary }}</p>
             {% endif %}
+
+            <p>
+            <form action="{% url 'update_transcript_with_chatgpt' transcript_id=transcript.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Create Summary</button>
+            </form>
+            </p>
+
             <form action="{% url 'delete_transcript' id=transcript.id %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Delete">
-                <a href="{% url 'send_to_chatgpt' transcript_id=transcript.id %}">
-                    <button type="button"> Create summary </button>
-                </a>
             </form>
         </li>
         <br>
@@ -30,4 +36,5 @@
         {% endfor %}
     </ul>
 </body>
+
 </html>

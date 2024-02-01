@@ -33,10 +33,9 @@ urlpatterns = [
     path('upload-media/', views.upload_media_form, name='upload_media_form'),
     path('upload-media/submit/', views.upload_media_submit, name='upload_media_submit'),
     path('delete/<int:id>/', views.delete_transcript, name='delete_transcript'),
-    path('send_to_chatgpt/<int:transcript_id>/', views.send_to_chatgpt, name='send_to_chatgpt'),
+    path('send_to_chatgpt/<int:transcript_id>/', views.update_transcript_with_chatgpt, name='update_transcript_with_chatgpt'),
     path('api/transcripts/', TranscriptsList.as_view(), name='transcripts-list'),
     path('api/uploadedfiles/', UploadedFileList.as_view(), name='uploadedfiles-list'),
-
 ]
 
 if settings.DEBUG:
