@@ -2,14 +2,10 @@
 <html lang="en" xml:lang="en">
 <head>
     <title>Upload Media</title>
-    {% if video_id %}
-    <meta http-equiv="refresh" content="30">
-    {% endif %}
 </head>
 
 <p><a href="{% url 'view_transcripts' %}"><button type="button">View Transcripts</button></a></p>
 <p><a href="{% url 'add_transcript_form' %}"> <button>Add New Transcript Manually</button></a></p>
-
 
 <body>
     <h1>Upload a File</h1>
@@ -24,7 +20,5 @@
     {% endfor %}
     {% endif %}
 
-
-    
 </body>
 </html>

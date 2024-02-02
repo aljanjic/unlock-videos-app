@@ -113,7 +113,7 @@ def process_audio(audio_file_id):
 
         # Optionally, delete the audio file after processing
         # os.remove(audio_file_location)
-        print(f"Audio file transcript created.")
+        print("Audio file transcript created.")
     except UploadedFile.DoesNotExist:
         print(f"Audio file with id {audio_file_id} does not exist.")
 
@@ -147,7 +147,7 @@ def process_video(video_id):
         # video.save()
 
         # os.remove(audio_file_location)  # Clean up the audio file
-        print(f"Video transcript created.")
+        print("Video transcript created.")
     except UploadedFile.DoesNotExist:
         print(f"Video with id {video_id} does not exist.")
 
