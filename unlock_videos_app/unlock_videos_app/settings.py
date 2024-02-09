@@ -30,8 +30,7 @@ OPENAI_API_KEY = config('OPENAI_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['unlockvideosapp.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
