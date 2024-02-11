@@ -2,7 +2,6 @@ from django import forms
 from .models import UploadedFile, Transcripts
 from django.core.exceptions import ValidationError
 import magic
-import os
 
 class MediaUploadForm(forms.ModelForm):
     class Meta:

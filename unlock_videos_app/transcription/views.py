@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST, require_GET, require_http_methods
-from django.http import JsonResponse
 from django.conf import settings
 from .models import Transcripts, UploadedFile
 from .forms import MediaUploadForm, TranscriptForm
