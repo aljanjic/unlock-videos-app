@@ -10,7 +10,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn -c conf/gunicorn_config.py unlock_videos_app.wsgi:application
     volumes:
       - ./unlock_videos_app:/usr/src/app
     ports:

@@ -29,7 +29,7 @@ OPENAI_API_KEY = config('OPENAI_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['164.92.183.173', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['APP_HOST', 'localhost', '127.0.0.1']
 
 
 # Application definition
