@@ -19,10 +19,12 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
+from django.views.generic.base import RedirectView
 from transcription import views
 from transcription.views import TranscriptsList, UploadedFileList, add_transcript_form, add_transcript_submit
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/view/'), name='go-to-view'),
     path('admin/', admin.site.urls),
     path('transcription/', include('transcription.urls')),
     path('add/', add_transcript_form, name='add_transcript_form'),
