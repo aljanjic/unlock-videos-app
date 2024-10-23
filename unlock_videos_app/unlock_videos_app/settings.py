@@ -92,6 +92,7 @@ DATABASES = {
 
 CSRF_TRUSTED_ORIGINS = [
     'https://aljanjic.com',
+    'https://v1.aljanjic.com'
 ]
 
 
